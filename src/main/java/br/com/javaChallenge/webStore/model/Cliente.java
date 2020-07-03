@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.validator.constraints.Length;
 
 import br.com.javaChallenge.webStore.core.IBase;
+import br.com.javaChallenge.webStore.enums.TipoEntradaEnum;
 
 @Entity
 public class Cliente  implements IBase {
@@ -28,8 +31,9 @@ public class Cliente  implements IBase {
 	@Length(max=14)
 	private String cpfCnpj;
 	
+	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
-	private String tipoEntrada;
+	private TipoEntradaEnum tipoEntrada;
 	
 	@Column(precision = 17, scale = 2, nullable = false)
 	private BigDecimal valorLimite;
@@ -65,11 +69,11 @@ public class Cliente  implements IBase {
 		this.cpfCnpj = cpfCnpj;
 	}
 
-	public String getTipoEntrada() {
+	public TipoEntradaEnum getTipoEntrada() {
 		return tipoEntrada;
 	}
 
-	public void setTipoEntrada(String tipoEntrada) {
+	public void setTipoEntrada(TipoEntradaEnum tipoEntrada) {
 		this.tipoEntrada = tipoEntrada;
 	}
 

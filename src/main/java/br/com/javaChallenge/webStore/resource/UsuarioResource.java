@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.javaChallenge.webStore.business.UsuarioBusiness;
+import br.com.javaChallenge.webStore.core.BusinessException;
+import br.com.javaChallenge.webStore.core.model.WebServiceResponse;
 import br.com.javaChallenge.webStore.model.Usuario;
 import br.com.javaChallenge.webStore.repository.UsuariosRepository;
 
@@ -23,7 +26,11 @@ public class UsuarioResource {
 	
 	@Autowired
 	private UsuariosRepository usuarioRepository;
-	
+	@Autowired
+	private UsuarioBusiness usuarioBusiness;
+
+	private WebServiceResponse vWebServiceResponse;
+
 	@GetMapping("/usuario")
 	public List<Usuario> listar() {
 		return usuarioRepository.findAll();
@@ -35,8 +42,20 @@ public class UsuarioResource {
 	}
 
 	@PostMapping("/usuario")
-	public Usuario adicionar(@RequestBody @Valid Usuario T) {
-		return usuarioRepository.save(T);
+	public WebServiceResponse adicionar(@RequestBody @Valid Usuario T) {
+		try {
+			try {
+				usuarioBusiness.validaUsuario(T);
+			} catch (BusinessException e) {
+				vWebServiceResponse = new WebServiceResponse(true, false, e.getMessage());
+			}
+			@Valid
+			Usuario usuario = usuarioRepository.save(T);
+			vWebServiceResponse = new WebServiceResponse(usuario);
+		} catch (Exception e) {
+			vWebServiceResponse = new WebServiceResponse(false, true, e.getMessage());
+		}
+		return vWebServiceResponse;
 	}
 	
 	@PostMapping("/usuarioLogin")

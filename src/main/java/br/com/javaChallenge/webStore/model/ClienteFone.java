@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import br.com.javaChallenge.webStore.core.IBase;
+import br.com.javaChallenge.webStore.enums.TipoContatoEnum;
 
 @Entity
 public class ClienteFone implements IBase {
@@ -21,8 +24,9 @@ public class ClienteFone implements IBase {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
-	private Integer tipo_contato;
+	private TipoContatoEnum tipoContato;
 
 	@ManyToOne
 	@JoinColumn(name="codCliente")
@@ -49,12 +53,12 @@ public class ClienteFone implements IBase {
 		this.id = id;
 	}
 
-	public Integer getTipo_contato() {
-		return tipo_contato;
+	public TipoContatoEnum getTipoContato() {
+		return tipoContato;
 	}
 
-	public void setTipo_contato(Integer tipo_contato) {
-		this.tipo_contato = tipo_contato;
+	public void setTipo_contato(TipoContatoEnum tipoContato) {
+		this.tipoContato = tipoContato;
 	}
 
 	public Cliente getCliente() {

@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.javaChallenge.webStore.core.IResource;
 import br.com.javaChallenge.webStore.core.model.WebServiceResponse;
-import br.com.javaChallenge.webStore.model.GrupoProdutos;
+import br.com.javaChallenge.webStore.model.GrupoProduto;
 import br.com.javaChallenge.webStore.repository.GrupoProdutosRepository;
 
 @RestController
 @CrossOrigin("${origem-permitida}")
-public class GrupoProdutosResource implements IResource<GrupoProdutos>{
+public class GrupoProdutosResource implements IResource<GrupoProduto>{
 	
 	@Autowired
 	private GrupoProdutosRepository grupoProdutosRepository;
@@ -30,7 +30,7 @@ public class GrupoProdutosResource implements IResource<GrupoProdutos>{
 	@Override
 	public WebServiceResponse Listar() {
 		try {
-			List<GrupoProdutos> vLista = grupoProdutosRepository.findAll();
+			List<GrupoProduto> vLista = grupoProdutosRepository.findAll();
 			vWebServiceResponse = new WebServiceResponse(vLista);
 		} catch (Exception e) {
 			vWebServiceResponse = new WebServiceResponse(false, true, e.getMessage());
@@ -42,7 +42,7 @@ public class GrupoProdutosResource implements IResource<GrupoProdutos>{
 	@Override
 	public WebServiceResponse editar(@PathVariable Long grupoId) {
 		try {
-			GrupoProdutos vObjeto = grupoProdutosRepository.findById(grupoId).get();
+			GrupoProduto vObjeto = grupoProdutosRepository.findById(grupoId).get();
 			vWebServiceResponse = new WebServiceResponse(vObjeto);
 		} catch (Exception e) {
 			vWebServiceResponse = new WebServiceResponse(false, true, e.getMessage());
@@ -52,9 +52,9 @@ public class GrupoProdutosResource implements IResource<GrupoProdutos>{
 
 	@PostMapping("/grupoProdutos")
 	@Override
-	public WebServiceResponse adicionar(@RequestBody @Valid GrupoProdutos T) {
+	public WebServiceResponse adicionar(@RequestBody @Valid GrupoProduto T) {
 		try {
-			GrupoProdutos vObjeto = grupoProdutosRepository.save(T);
+			GrupoProduto vObjeto = grupoProdutosRepository.save(T);
 			vWebServiceResponse = new WebServiceResponse(vObjeto);
 		} catch (Exception e) {
 			vWebServiceResponse = new WebServiceResponse(false, true, e.getMessage());

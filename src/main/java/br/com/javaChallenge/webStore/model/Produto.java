@@ -16,7 +16,7 @@ import javax.persistence.TemporalType;
 import br.com.javaChallenge.webStore.core.IBase;
 
 @Entity
-public class Produtos implements IBase {
+public class Produto implements IBase {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -24,13 +24,15 @@ public class Produtos implements IBase {
 	
 	@ManyToOne
 	@JoinColumn(name="codGrupo")
-	private GrupoProdutos grupo;
+	private GrupoProduto grupo;
 	
 	@Column(nullable = false)
 	private String referencia;
 	
 	@Column(nullable = false)
 	private String nome;
+	
+	private String descricao;
 	
 	@Column(precision = 17, scale = 2, nullable = false)
 	private BigDecimal valorCusto;
@@ -101,12 +103,20 @@ public class Produtos implements IBase {
 		this.valorVenda = valorVenda;
 	}
 
-	public GrupoProdutos getGrupo() {
+	public GrupoProduto getGrupo() {
 		return grupo;
 	}
 
-	public void setGrupo(GrupoProdutos grupo) {
+	public void setGrupo(GrupoProduto grupo) {
 		this.grupo = grupo;
+	}
+	
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	@Override
@@ -125,7 +135,7 @@ public class Produtos implements IBase {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Produtos other = (Produtos) obj;
+		Produto other = (Produto) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

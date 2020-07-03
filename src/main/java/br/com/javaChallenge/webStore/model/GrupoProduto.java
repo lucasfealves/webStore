@@ -13,7 +13,7 @@ import javax.persistence.TemporalType;
 import br.com.javaChallenge.webStore.core.IBase;
 
 @Entity
-public class GrupoProdutos implements IBase {
+public class GrupoProduto implements IBase {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

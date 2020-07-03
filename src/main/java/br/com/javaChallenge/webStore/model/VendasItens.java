@@ -24,14 +24,10 @@ public class VendasItens implements IBase {
 	@JoinColumn(name="codVenda", nullable = false)
 	private Venda venda;
 	
-	@ManyToOne(targetEntity=Produtos.class,fetch=FetchType.LAZY)
+	@ManyToOne(targetEntity=Produto.class,fetch=FetchType.LAZY)
 	@JoinColumn(name="codItem")
-	private Produtos item;
+	private Produto item;
 	
-	@ManyToOne(targetEntity=Ticket.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="codTicket")
-	private Ticket itemTicket;
-
 	@Column(precision = 17, scale = 2, nullable = false)
 	private BigDecimal qtde;
 	
@@ -54,20 +50,12 @@ public class VendasItens implements IBase {
 		this.venda = venda;
 	}
 
-	public Produtos getItem() {
+	public Produto getItem() {
 		return item;
 	}
 
-	public void setItem(Produtos item) {
+	public void setItem(Produto item) {
 		this.item = item;
-	}
-
-	public Ticket getItemTicket() {
-		return itemTicket;
-	}
-
-	public void setItemTicket(Ticket itemTicket) {
-		this.itemTicket = itemTicket;
 	}
 
 	public BigDecimal getQtde() {
