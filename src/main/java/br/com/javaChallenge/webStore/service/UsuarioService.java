@@ -1,4 +1,4 @@
-package br.com.javaChallenge.webStore.resource;
+package br.com.javaChallenge.webStore.service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7,46 +7,60 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import br.com.javaChallenge.webStore.core.IResource;
+import br.com.javaChallenge.webStore.business.UsuarioBusiness;
+import br.com.javaChallenge.webStore.core.BusinessException;
+import br.com.javaChallenge.webStore.core.IService;
 import br.com.javaChallenge.webStore.core.model.WebServiceResponse;
 import br.com.javaChallenge.webStore.model.Usuario;
-import br.com.javaChallenge.webStore.service.UsuarioService;
+import br.com.javaChallenge.webStore.repository.UsuariosRepository;
 
-@RestController
-@CrossOrigin("${origem-permitida}")
-public class UsuarioResource implements IResource<Usuario> {
+@Service
+public class UsuarioService implements IService<Usuario> {
 	
 	@Autowired
-	private UsuarioService usuarioService;
+	private UsuariosRepository usuarioRepository;
+	@Autowired
+	private UsuarioBusiness usuarioBusiness;
+
+	private WebServiceResponse vWebServiceResponse;
 
 	@Override
-	@GetMapping("/usuario")
 	public List<Usuario> listar() {
-		return usuarioService.listar();
+		return usuarioRepository.findAll();
 	}
 	
+	public List<Usuario> listar(@PathVariable Long usuarioId) {
+		return usuarioRepository.findAll();
+	}
+
 	@Override
-	@GetMapping("/usuario/{usuarioId}")
 	public Usuario editar(@PathVariable Long usuarioId) {
-		return usuarioService.editar(usuarioId);
+		return usuarioRepository.findById(usuarioId).get();
 	}
-	
+
 	@Override
-	@PostMapping("/usuario")
 	public WebServiceResponse adicionar(@RequestBody @Valid Usuario T) {
-		return usuarioService.adicionar(T);
+		try {
+			try {
+				usuarioBusiness.validaUsuario(T);
+			} catch (BusinessException e) {
+				vWebServiceResponse = new WebServiceResponse(true, false, e.getMessage());
+			}
+			@Valid
+			Usuario usuario = usuarioRepository.save(T);
+			vWebServiceResponse = new WebServiceResponse(usuario);
+		} catch (Exception e) {
+			vWebServiceResponse = new WebServiceResponse(false, true, e.getMessage());
+		}
+		return vWebServiceResponse;
 	}
 	
-	@PostMapping("/usuarioLogin")
 	public String logon(@RequestBody @Valid Usuario T) {
-		Usuario vObjUsuario = usuarioService.listar().stream().filter(x -> x.getLogin().equals(T.getLogin())).findAny().get();
+		Usuario vObjUsuario = usuarioRepository.findAll().stream().filter(x -> x.getLogin().equals(T.getLogin())).findAny().get();
 		
 		String vHashCode = geraHashCode(vObjUsuario.getChave(), "MD5");
 		String vCHAVE = geraHashCode(T.getChave(), "MD5");
@@ -65,7 +79,6 @@ public class UsuarioResource implements IResource<Usuario> {
 	        byte[] bytes = md.digest();
 	        return new String(bytes);
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

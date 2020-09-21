@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.javaChallenge.webStore.core.model.WebServiceResponse;
 
-public interface IResource<T> {
-
-	WebServiceResponse vWebServiceResponse = null;
+public interface IService<T> {
 	
-	List<T> listar();
-	T editar(@PathVariable Long id);
-	WebServiceResponse adicionar(@RequestBody @Valid T T); 
+	public List<T> listar();
+	public T editar(@PathVariable Long id);
+	public WebServiceResponse adicionar(@RequestBody @Valid T T); 
+
 }

@@ -1,15 +1,12 @@
 package br.com.javaChallenge.webStore.model;
 
 import java.util.Date;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -56,10 +53,6 @@ public class Usuario implements IBase {
 	public void setDataModificacao(Date dataModificacao) {
 		this.dataModificacao = dataModificacao;
 	}
-
-	@OneToMany(mappedBy="Usuario")
-	@MapKey
-	private Map<Long, Venda> vendas;
 	
 	public Long getId() {
 		return id;
@@ -99,14 +92,6 @@ public class Usuario implements IBase {
 
 	public void setDataCad(Date dataCad) {
 		this.dataCad = dataCad;
-	}
-
-	public Map<Long, Venda> getVendas() {
-		return vendas;
-	}
-
-	public void setVendas(Map<Long, Venda> vendas) {
-		this.vendas = vendas;
 	}
 	
 }

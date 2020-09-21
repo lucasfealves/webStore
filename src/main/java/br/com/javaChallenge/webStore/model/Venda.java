@@ -1,7 +1,5 @@
 package br.com.javaChallenge.webStore.model;
 
-import java.util.Map;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,8 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
 
 import br.com.javaChallenge.webStore.core.IBase;
 
@@ -29,10 +25,6 @@ public class Venda implements IBase {
 	@JoinColumn(name="codCliente")
 	private Cliente Cliente;
 	
-	@OneToMany(mappedBy="venda")
-	@MapKey
-	private Map<Long, VendasItens> itens;
-
 	public Long getId() {
 		return id;
 	}
@@ -55,14 +47,6 @@ public class Venda implements IBase {
 
 	public void setCliente(Cliente cliente) {
 		Cliente = cliente;
-	}
-
-	public Map<Long, VendasItens> getItens() {
-		return itens;
-	}
-
-	public void setItens(Map<Long, VendasItens> itens) {
-		this.itens = itens;
 	}
 	
 }

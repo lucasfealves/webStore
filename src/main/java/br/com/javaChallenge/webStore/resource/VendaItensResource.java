@@ -13,25 +13,39 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.javaChallenge.webStore.core.IResource;
+import br.com.javaChallenge.webStore.core.model.WebServiceResponse;
 import br.com.javaChallenge.webStore.model.VendasItens;
-import br.com.javaChallenge.webStore.repository.VendaItensRepository;
+import br.com.javaChallenge.webStore.service.VendaItensService;
 
 @RestController
 @CrossOrigin("${origem-permitida}")
-public class VendaItensResource {
+public class VendaItensResource implements IResource<VendasItens> {
 	
 	@Autowired
-	private VendaItensRepository vendaItensRepository;
+	private VendaItensService vendaItensService;
+
+	@Override
+	public List<VendasItens> listar() {
+		return null;
+	}
 	
 	@GetMapping("/vendaItens/{venda}")
 	public List<VendasItens> listar(@PathVariable Long venda) {
-		return vendaItensRepository.findAll().stream()
+		return vendaItensService.listar().stream()
 				.filter(x -> x.getVenda().getId()==venda)
 				.collect(Collectors.toList());
 	}
-	
+
+	@Override
+	@GetMapping("/vendaItens/item/{itemVenda}")
+	public VendasItens editar(@PathVariable Long itemVenda) {
+		return vendaItensService.editar(itemVenda);
+	}
+
+	@Override
 	@PostMapping("/vendaItens")
-	public VendasItens adicionar(@RequestBody @Valid VendasItens T) {
-		return vendaItensRepository.save(T);
+	public WebServiceResponse adicionar(@RequestBody @Valid VendasItens T) {
+		return vendaItensService.adicionar(T);
 	}
 }

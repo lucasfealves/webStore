@@ -1,7 +1,6 @@
 package br.com.javaChallenge.webStore.resource;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -12,50 +11,37 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.javaChallenge.webStore.core.IResource;
 import br.com.javaChallenge.webStore.core.model.WebServiceResponse;
 import br.com.javaChallenge.webStore.model.ClienteFone;
-import br.com.javaChallenge.webStore.repository.ClienteFoneRepository;
+import br.com.javaChallenge.webStore.service.ClienteFoneService;
 
 @RestController
-public class ClienteFoneResource {
+public class ClienteFoneResource implements IResource<ClienteFone> {
 	
 	@Autowired
-	private ClienteFoneRepository clienteFoneRepository;
+	private ClienteFoneService clienteFoneService;
 	
-	private WebServiceResponse vWebServiceResponse;
+	@Override
+	@GetMapping("/clienteFone/foneClientes")
+	public List<ClienteFone> listar() {
+		return clienteFoneService.listar();
+	}
 	
 	@GetMapping("/clienteFone/foneCliente/{clienteId}")
-	public WebServiceResponse listar(@PathVariable Long clienteId) {
-		try {
-			List<ClienteFone> vLista = clienteFoneRepository.findAll().stream()
-					.filter(x -> x.getCliente().getId()==clienteId)
-					.collect(Collectors.toList());
-			vWebServiceResponse = new WebServiceResponse(vLista);
-		} catch (Exception e) {
-			vWebServiceResponse = new WebServiceResponse(false, true, e.getMessage());
-		}
-		return vWebServiceResponse;
+	public List<ClienteFone> listar(@PathVariable Long clienteId) {
+		return clienteFoneService.listar(clienteId);
 	}
 	
+	@Override
 	@GetMapping("/clienteFone/{foneId}")
-	public WebServiceResponse editar(@PathVariable Long foneId) {
-		try {
-			ClienteFone vObj = clienteFoneRepository.findById(foneId).get();
-			vWebServiceResponse = new WebServiceResponse(vObj);
-		} catch (Exception e) {
-			vWebServiceResponse = new WebServiceResponse(false, true, e.getMessage());
-		}
-		return vWebServiceResponse;
+	public ClienteFone editar(@PathVariable Long foneId) {
+		return clienteFoneService.editar(foneId);
 	}
-
+	
+	@Override
 	@PostMapping("/clienteFone")
 	public WebServiceResponse adicionar(@RequestBody @Valid ClienteFone T) {
-		try {
-			ClienteFone vObj = clienteFoneRepository.save(T);
-			vWebServiceResponse = new WebServiceResponse(vObj);
-		} catch (Exception e) {
-			vWebServiceResponse = new WebServiceResponse(false, true, e.getMessage());
-		}
-		return vWebServiceResponse;
+		return clienteFoneService.adicionar(T);
 	}
 }

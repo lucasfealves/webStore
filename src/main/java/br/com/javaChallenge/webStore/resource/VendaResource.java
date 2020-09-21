@@ -12,48 +12,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.javaChallenge.webStore.business.VendaBusiness;
-import br.com.javaChallenge.webStore.core.BusinessException;
+import br.com.javaChallenge.webStore.core.IResource;
 import br.com.javaChallenge.webStore.core.model.WebServiceResponse;
 import br.com.javaChallenge.webStore.model.Venda;
-import br.com.javaChallenge.webStore.repository.VendaRepository;
+import br.com.javaChallenge.webStore.service.VendaService;
 
 @RestController
 @CrossOrigin("${origem-permitida}")
-public class VendaResource {
+public class VendaResource implements IResource<Venda> {
 	
 	@Autowired
-	private VendaRepository vendaRepository;
-	@Autowired
-	private VendaBusiness vendaBusiness;
-
-	private WebServiceResponse vWebServiceResponse;
+	private VendaService vendaService;
 	
+	@Override
 	@GetMapping("/venda")
 	public List<Venda> listar() {
-		return vendaRepository.findAll();
-	}
-
-	@GetMapping("/venda/{venda}")
-	public Venda listar(@PathVariable Long venda) {
-		return vendaRepository.findById(venda).get();
+		return vendaService.listar();
 	}
 	
+	@Override
+	@GetMapping("/venda/{venda}")
+	public Venda editar(@PathVariable Long venda) {
+		return vendaService.editar(venda);
+	}
+	
+	@Override
 	@PostMapping("/venda")
 	public WebServiceResponse adicionar(@RequestBody @Valid Venda T) {
-		try {
-			try {
-				vendaBusiness.validaVenda(T);
-			} catch (BusinessException e) {
-				vWebServiceResponse = new WebServiceResponse(true, false, e.getMessage());
-			}
-			@Valid
-			Venda venda = vendaRepository.save(T);
-			vWebServiceResponse = new WebServiceResponse(venda);
-		} catch (Exception e) {
-			vWebServiceResponse = new WebServiceResponse(true, false, e.getMessage());
-		}
-
-		return vWebServiceResponse ;
+		return vendaService.adicionar(T);
 	}
 }
